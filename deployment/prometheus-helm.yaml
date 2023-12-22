@@ -88,6 +88,6 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: prometheus-community-grafana
+                name: prometheus-community-kube-prometheus
                 port:
                   name: http-web
