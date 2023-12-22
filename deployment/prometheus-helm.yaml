@@ -82,13 +82,14 @@ spec:
                 name: prometheus-community-grafana
                 port:
                   number: 80
-    - host: prometheus.liberaalgeluid.nl
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: prometheus-community-kube-prometheus
-                port:
-                  name: http-web
+    # Should be protected
+#    - host: prometheus.liberaalgeluid.nl
+#      http:
+#        paths:
+#          - path: /
+#            pathType: Prefix
+#            backend:
+#              service:
+#                name: prometheus-community-kube-prometheus
+#                port:
+#                  name: http-web
