@@ -41,3 +41,44 @@ spec:
 #      create: false
 #      name: aws-load-balancer-controller
 ##      name: cluster-autoscaler
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: prometheus
+  labels:
+    app: prometheus
+  annotations:
+    # Ingress Core Settings
+    kubernetes.io/ingress.class: "alb"
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/group.name: eks-demo-group
+    # SSL
+    external-dns.alpha.kubernetes.io/hostname: prometheus.liberaalgeluid.nl
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS": 443}, {"HTTP": 8080}, {"HTTPS": 8443}]'
+    alb.ingress.kubernetes.io/ssl-redirect: '443'
+    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:us-west-2:${AWS_ACCOUNT_ID}:certificate/6776643f-a45b-47a9-97c7-f8999fb3ce61
+    # Health Check Settings
+#    alb.ingress.kubernetes.io/healthcheck-protocol: HTTP
+#    alb.ingress.kubernetes.io/healthcheck-port: traffic-port
+#    alb.ingress.kubernetes.io/healthcheck-path: /actuator/health
+#    alb.ingress.kubernetes.io/healthcheck-interval-seconds: '15'
+#    alb.ingress.kubernetes.io/healthcheck-timeout-seconds: '5'
+#    alb.ingress.kubernetes.io/success-codes: '200'
+#    alb.ingress.kubernetes.io/healthy-threshold-count: '2'
+#    alb.ingress.kubernetes.io/unhealthy-threshold-count: '2'
+  namespace: prometheus
+spec:
+  rules:
+    - host: prometheus.liberaalgeluid.nl
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: prometheus-community-grafana
+                port:
+                  number: 80
