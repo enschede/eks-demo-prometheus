@@ -56,7 +56,7 @@ metadata:
     alb.ingress.kubernetes.io/target-type: ip
     alb.ingress.kubernetes.io/group.name: eks-demo-group
     # SSL
-    external-dns.alpha.kubernetes.io/hostname: grafana.liberaalgeluid.nl
+    external-dns.alpha.kubernetes.io/hostname: grafana.liberaalgeluid.nl, prometheus.liberaalgeluid.nl
     alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80},{"HTTPS": 443}]'
     alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:us-west-2:${AWS_ACCOUNT_ID}:certificate/6776643f-a45b-47a9-97c7-f8999fb3ce61
     # Health Check Settings
@@ -81,3 +81,13 @@ spec:
                 name: prometheus-community-grafana
                 port:
                   number: 80
+    - host: prometheus.liberaalgeluid.nl
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: prometheus-community-grafana
+                port:
+                  name: http-web
